@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans
+	                      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="taskJob" class="com.yoler.quartz.QuartzJob"/>
+
+    <!--方法一-->
+    <!--使用 MethodInvokingJobDetailFactoryBean-->
+    <!--这种方式在你想要调用特定类的一个方法的时候很是方便，比另一种方法要简单的多。-->
+    <bean id="jobDetailOne" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="taskJob"/>
+        <property name="targetMethod" value="run"/>
+    </bean>
+
+    <!--使用 JobDetailFactoryBean-->
+    <!--当需要更高级的设置，需要给作业传递数据，想更加灵活的话就使用这种方式。-->
+    <!--<bean id="jobDetailTwo" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">-->
+        <!--<property name="durability" value="true"/>-->
+        <!--<property name="jobClass">-->
+            <!--<value>com.yoler.quartz.QuartzJob</value>-->
+        <!--</property>-->
+        <!--<property name="jobDataAsMap">-->
+            <!--<map>-->
+                <!--<entry key="targetObject" value="quartzTask"/>-->
+                <!--<entry key="targetMethod" value="syncDraw"/>-->
+            <!--</map>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--  调度触发器 -->
+    <!--用来定义调度器何时将会执行调度任务-->
+    <bean id="triggerOne"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="name" value="work_default_name"/>
+        <property name="group" value="work_default"/>
+        <property name="jobDetail">
+            <ref bean="jobDetailOne"/>
+        </property>
+        <property name="cronExpression">
+            <value>0/5 * * * * ?</value>
+        </property>
+    </bean>
+
+    <!-- 调度工厂 -->
+    <!--SchedulerFactoryBean 将 jobDetails 和 triggers 整合在一起以配置 Quartz 调度器。-->
+    <bean name="startQuertz" lazy-init="false" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobDetails">
+            <list>
+                <ref bean="jobDetailOne"/>
+            </list>
+        </property>
+
+        <property name="triggers">
+            <list>
+                <ref bean="triggerOne"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

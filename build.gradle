@@ -1,0 +1,33 @@
+group 'com.yoler'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile(
+            ["ch.qos.logback:logback-classic:1.2.3"],
+            ["javax.servlet:javax.servlet-api:4.0.0-b07"],
+            ["javax.servlet:jstl:1.2"],
+            ["org.apache.poi:poi:3.14"],
+            ["org.apache.poi:poi-ooxml:3.14"],
+            ["org.springframework:spring-context:4.3.9.RELEASE"],
+            ["org.springframework:spring-core:4.3.9.RELEASE"],
+            ["org.springframework:spring-webmvc:4.3.9.RELEASE"],
+            ["org.springframework:spring-tx:4.3.9.RELEASE"],
+            ["org.springframework:spring-jdbc:4.3.9.RELEASE"],
+            ["org.springframework:spring-context-support:4.3.9.RELEASE"],
+            ["org.aspectj:aspectjweaver:1.8.10"],
+            ["org.quartz-scheduler:quartz:2.3.0"]
+    )
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
